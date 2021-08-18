@@ -136,7 +136,7 @@ class quadprobe {
                 return false;
             }
             
-            index += h(key) * h(hey) % items.size();
+            index += h(key) * h(key) % items.size();
         }
         bucket b;
         b.val = val;
@@ -174,7 +174,7 @@ class quadprobe {
         {
             while (items[index].key != key)
             {
-                index += h(key) * h(key);
+                index += h(key) * h(key) % items.size();
             }
         }
         
@@ -185,7 +185,7 @@ class quadprobe {
                 break;
             }
             
-            index += h(key) * h(hey) % items.size();
+            index += h(key) * h(key) % items.size();
         }
         items[index].s = status::occupied;
         numItems++;
@@ -197,16 +197,23 @@ class quadprobe {
 template<typename V, typename K, typename hasher = std::hash<K>>
 class dblhash {
     struct bucket {
-        status s;
+        status s = status::occupied;
         V val;
         K key;
     };
     vector<bucket> items;
     size_t numItems;
-    hasher h;
+    hasher h,h2;
     
     void rehash_grow() {
+        vector<bucket> oldItems = items;
+        items.clear();
+        items.resize(2 * oldItems.size());;
 
+        for (size_t i = 0; i < oldItems.size(); i++)
+        {
+            this->insert(oldItems[i].key,oldItems[i].val);
+        }
     }
     public:
 
@@ -219,11 +226,74 @@ class dblhash {
         return numItems;
     }
 
-    bool insert(const K& key, const V& val) {}
+    bool insert(const K& key, const V& val) {
+        size_t index = h(key) % items.size(),c = 1;
+        while (items[index].s == status::occupied)
+        {
+            if (items[index].key == key)
+            {
+                return false;
+            }
+            
+            index += h2(key) * c % items.size();
+            c++;
+        }
+        bucket b;
+        b.val = val;
+        b.key = key;
+        b.status = status::occupied;
 
-    void erase(const K& key, const V& val) {}
+        items[index] = b;
+        numItems++;
 
-    V& operator[](const K& key) {}
+        if (items.size() / numItems == 2)
+        {
+            rehash_grow();
+        }
+        
+        return true;
+    }
+
+    void erase(const K& key, const V& val) {
+        size_t index = h(key) % items.size(), c = 1;
+        while (items[index].s == status::occupied)
+        {
+            if (items[index].key == key)
+            {
+                items[index].s = status::deleted;
+                numItems--;
+            }
+            
+            index += h2(key) * c % items.size();
+            c++;
+        }
+    }
+
+    V& operator[](const K& key) {
+        size_t index = h(key) % items.size(),c = 1;
+        if (insert(key,nullptr))
+        {
+            while (items[index].key != key)
+            {
+                index += h2(key) * c % items.size();
+                c++;
+            }
+        }
+        
+        while (items[index].s == status::occupied)
+        {
+            if (items[index].key == key)
+            {
+                break;
+            }
+            
+            index += h2(key) * c % items.size();
+            c++;
+        }
+        items[index].s = status::occupied;
+        numItems++;
+        return &items[index].val;
+    }
+
 };
-
 #endif
