@@ -13,29 +13,28 @@ enum class status : uint8_t {
 };
 
 template<typename V, typename K, typename hasher = std::hash<K>>
-class hashtable {
-    struct bucket {
-        status s;
-        V val;
-        K key;
-    };
-    public:
-    
-    virtual bool insert(const K& key, const V& val);
-
-    virtual void erase(const K& key, const V& val);
-
-    virtual void operator[](const V& val);
-};
-
-template<typename V, typename K, typename hasher = std::hash<K>>
-class sepchain : public hashtable<V, K, hasher> {
+class sepchain{
     vector<vector<V>> items;
     hasher h;
+    size_t numItems;
+
+    void regrow() {
+        
+    }
+
     public:
 
+    sepchain() {
+        items.resize(16);
+        numItems = 0;
+    }
+
+    size_t size() {
+        return numItems;
+    }
+
     bool insert(const K& key, const V& val) {
-        size_t index = h(key);
+        size_t index = h(key) % this->size();
         for (size_t i = 0; i < items[index].size(); i++)
         {
             if (val == items[index][i])
@@ -44,25 +43,27 @@ class sepchain : public hashtable<V, K, hasher> {
             }
         }
         items[index].push_back(val);
+        numItems++;
         return true;
     }
 
     void erase(const K& key, const V& val) {
         hasher h;
-        size_t index = h(key);
+        size_t index = h(key) % this->size();
         for (size_t i = 0; i < items[index].size(); i++)
         {
             if (val == items[index][i])
             {
                 swap(items[index][i],items[index].back());
                 items[index].pop_back();
+                numItems--;
             }
         }
     }
     
     V& operator[](const K& key) {
         hasher h;
-        size_t index = h(key);
+        size_t index = h(key) % this->size();
         if (!this->insert(key, nullptr))
         {
             for (size_t i = 0; i < items[index].size(); i++)
@@ -78,13 +79,23 @@ class sepchain : public hashtable<V, K, hasher> {
 };
 
 template<typename V, typename K, typename hasher = std::hash<K>>
-class quadprobe : public hashtable<V, K, hasher> {
-    // vector<bucket> items;
+class quadprobe {
+    struct bucket {
+        status s;
+        V val;
+        K key;
+    };
+    vector<bucket> items;
 };
 
 template<typename V, typename K, typename hasher = std::hash<K>>
-class dblhash : public hashtable<V, K, hasher> {
-    // vector<bucket> items;
+class dblhash {
+    struct bucket {
+        status s;
+        V val;
+        K key;
+    };
+    vector<bucket> items;
 };
 
 #endif
