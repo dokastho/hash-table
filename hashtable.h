@@ -23,8 +23,6 @@ class sepchain{
         items.clear();
         items.resize();
 
-        hasher h;
-
         for (size_t i = 0; i < oldItems.size(); i++)
         {
             for (size_t j = 0; j < oldItems[i].size(); j++)
@@ -67,7 +65,6 @@ class sepchain{
     }
 
     void erase(const K& key, const V& val) {
-        hasher h;
         size_t index = h(key) % this->size();
         for (size_t i = 0; i < items[index].size(); i++)
         {
@@ -81,7 +78,6 @@ class sepchain{
     }
     
     V& operator[](const K& key) {
-        hasher h;
         size_t index = h(key) % this->size();
         if (!this->insert(key, nullptr))
         {
@@ -105,6 +101,29 @@ class quadprobe {
         K key;
     };
     vector<bucket> items;
+    size_t numItems;
+    hasher h;
+    
+    void rehash_grow() {
+
+    }
+    public:
+
+    quadprobe() {
+        items.resize(16);
+        numItems = 0;
+    }
+
+    size_t size() {
+        return numItems;
+    }
+
+    bool insert(const K& key, const V& val) {}
+
+    void erase(const K& key, const V& val) {}
+
+    V& operator[](const K& key) {}
+
 };
 
 template<typename V, typename K, typename hasher = std::hash<K>>
@@ -115,6 +134,28 @@ class dblhash {
         K key;
     };
     vector<bucket> items;
+    size_t numItems;
+    hasher h;
+    
+    void rehash_grow() {
+
+    }
+    public:
+
+    dblhash() {
+        items.resize(16);
+        numItems = 0;
+    }
+
+    size_t size() {
+        return numItems;
+    }
+
+    bool insert(const K& key, const V& val) {}
+
+    void erase(const K& key, const V& val) {}
+
+    V& operator[](const K& key) {}
 };
 
 #endif
