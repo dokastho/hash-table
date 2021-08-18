@@ -18,7 +18,21 @@ class sepchain{
     hasher h;
     size_t numItems;
 
-    void regrow() {
+    void rehash_grow() {
+        vector<vector<V>> oldItems = items;
+        items.clear();
+        items.resize();
+
+        hasher h;
+
+        for (size_t i = 0; i < oldItems.size(); i++)
+        {
+            for (size_t j = 0; j < oldItems[i].size(); j++)
+            {
+                items.insert(oldItems[i][j]);
+            }
+            
+        }
         
     }
 
@@ -44,6 +58,11 @@ class sepchain{
         }
         items[index].push_back(val);
         numItems++;
+        if (items.size() / numItems == 2)
+        {
+            rehash_grow();
+        }
+        
         return true;
     }
 
