@@ -228,7 +228,7 @@ class dblhash {
 
         if (items.size() / numItems == 2)
         {
-            rehash_grow();
+            rehash_grow();//
         }
         
         return true;
