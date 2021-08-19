@@ -12,8 +12,20 @@
 */
 
 int main() {
+    int passedTests = 0;
     sepchain<string, int> hash1;
-    assert(hash1["foo"] == 0);
+    cout << "Test 1\n";
+    if (hash1["foo"] == 0) {
+        passedTests++;
+        cout << "Passed\n";
+    }
+    else {
+        cout << "Failed\n";
+        cout << "Actual: " << hash1["foo"] << endl;
+        cout << "Expected: 0\n";
+    }
+    
+    
     hash1["foo"] = 1;
     assert(hash1["foo"] == 1);
     assert(hash1.size() == 1);

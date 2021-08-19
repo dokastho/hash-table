@@ -44,7 +44,7 @@ class sepchain{
     }
 
     bool insert(const K& key, const V& val) {
-        index = h(key) % this->size();
+        index = h(key) % items.size();
         for (size_t i = 0; i < items[index].size(); i++)
         {
             if (val == items[index][i].second)
@@ -63,7 +63,7 @@ class sepchain{
     }
 
     void erase(const K& key, const V& val) {
-        index = h(key) % this->size();
+        index = h(key) % items.size();
         for (size_t i = 0; i < items[index].size(); i++)
         {
             if (val == items[index][i].second)
@@ -76,7 +76,7 @@ class sepchain{
     }
     
     V& operator[](const K& key) {
-        index = h(key) % this->size();
+        index = h(key) % items.size();
         V def;
         this->insert(key,def);
         for (size_t i = 0; i < items[index].size(); i++)
