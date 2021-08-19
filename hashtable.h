@@ -12,12 +12,12 @@ enum class status : uint8_t {
     deleted
 };
 
-template<typename V, typename K, typename hasher = std::hash<K>>
+template<typename K, typename V, typename hasher = std::hash<K>>
 class sepchain{
     struct bucket {
         K key;
         vector<V> values;
-    }
+    };
     vector<bucket> items;
     hasher h;
     size_t numItems;
@@ -25,7 +25,7 @@ class sepchain{
     void rehash_grow() {
         vector<bucket> oldItems = items;
         items.clear();
-        items.resize();
+        items.resize(2 * oldItems.size());
 
         for (size_t i = 0; i < oldItems.size(); i++)
         {
@@ -49,7 +49,7 @@ class sepchain{
 
     bool insert(const K& key, const V& val) {
         size_t index = h(key) % this->size();
-        for (size_t i = 0; i < items[index].size(); i++)
+        for (size_t i = 0; i < items[index].values.size(); i++)
         {
             if (val == items[index].values[i])
             {
@@ -68,7 +68,7 @@ class sepchain{
 
     void erase(const K& key, const V& val) {
         size_t index = h(key) % this->size();
-        for (size_t i = 0; i < items[index].size(); i++)
+        for (size_t i = 0; i < items[index].values.size(); i++)
         {
             if (val == items[index][i])
             {
@@ -83,19 +83,19 @@ class sepchain{
         size_t index = h(key) % this->size();
         if (!this->insert(key, nullptr))
         {
-            for (size_t i = 0; i < items[index].size(); i++)
+            for (size_t i = 0; i < items[index].values.size(); i++)
             {
-                if (items[index][i] == nullptr)
+                if (items[index].values[i] == nullptr)
                 {
-                    return &items[index][i];
+                    return &items[index].values[i];
                 }
             }
         }
-        return &items[index].back();
+        return &items[index].values.back();
     }
 };
 
-template<typename V, typename K, typename hasher = std::hash<K>>
+template<typename K, typename V, typename hasher = std::hash<K>>
 class quadprobe {
     struct bucket {
         status s = status::occupied;
@@ -194,7 +194,7 @@ class quadprobe {
 
 };
 
-template<typename V, typename K, typename hasher = std::hash<K>>
+template<typename K, typename V, typename hasher = std::hash<K>>
 class dblhash {
     struct bucket {
         status s = status::occupied;

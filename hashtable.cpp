@@ -1,4 +1,5 @@
 #include "hashtable.h"
+#include <cassert>
 
 /*                      HASH TABLE SNAPSHOT
 *   The purpose of this file is to demonstrate my understanding
@@ -11,5 +12,23 @@
 */
 
 int main() {
+    sepchain<string, int> hash1;
+    assert(hash1["foo"] == 0);
+    hash1["foo"] = 1;
+    assert(hash1["foo"] == 1);
+    assert(hash1.size() == 1);
+
+    quadprobe<string, int> hash2;
+    assert(hash2["foo"] == 0);
+    hash2["foo"] = 1;
+    assert(hash2["foo"] == 1);
+    assert(hash2.size() == 1);
+
+    dblhash<string, int> hash3;
+    assert(hash3["foo"] == 0);
+    hash3["foo"] = 1;
+    assert(hash3["foo"] == 1);
+    assert(hash3.size() == 1);
+
     return 0;
 }
