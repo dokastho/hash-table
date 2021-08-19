@@ -16,7 +16,7 @@ template<typename K, typename V, typename hasher = std::hash<K>>
 class sepchain{
     vector<vector<pair<K,V>>> items;
     hasher h;
-    size_t numItems;
+    size_t numItems,index;
 
     void rehash_grow() {
         vector<vector<pair<K,V>>> oldItems = items;
@@ -44,7 +44,7 @@ class sepchain{
     }
 
     bool insert(const K& key, const V& val) {
-        size_t index = h(key) % this->size();
+        index = h(key) % this->size();
         for (size_t i = 0; i < items[index].size(); i++)
         {
             if (val == items[index][i].second)
@@ -63,7 +63,7 @@ class sepchain{
     }
 
     void erase(const K& key, const V& val) {
-        size_t index = h(key) % this->size();
+        index = h(key) % this->size();
         for (size_t i = 0; i < items[index].size(); i++)
         {
             if (val == items[index][i].second)
@@ -76,16 +76,16 @@ class sepchain{
     }
     
     V& operator[](const K& key) {
-        size_t index = h(key) % this->size();
-        if (!this->insert(key, nullptr))
+        index = h(key) % this->size();
+        V def;
+        this->insert(key,def);
+        for (size_t i = 0; i < items[index].size(); i++)
         {
-            for (size_t i = 0; i < items[index].size(); i++)
+            if (items[index][i].first == key)
             {
-                if (items[index][i].second == nullptr)
-                {
-                    return items[index][i].second;
-                }
+                return items[index][i].second;
             }
+            
         }
         return items[index].back().second;
     }
@@ -99,7 +99,7 @@ class quadprobe {
         K key;
     };
     vector<bucket> items;
-    size_t numItems;
+    size_t numItems,index;
     hasher h;
     
     void rehash_grow() {
@@ -124,7 +124,7 @@ class quadprobe {
     }
 
     bool insert(const K& key, const V& val) {
-        size_t index = h(key) % items.size();
+        index = h(key) % items.size();
         while (items[index].s == status::occupied)
         {
             if (items[index].key == key)
@@ -151,7 +151,7 @@ class quadprobe {
     }
 
     void erase(const K& key) {
-        size_t index = h(key) % items.size();
+        index = h(key) % items.size();
         while (items[index].s == status::occupied)
         {
             if (items[index].key == key)
@@ -165,26 +165,9 @@ class quadprobe {
     }
 
     V& operator[](const K& key) {
-        size_t index = h(key) % items.size();
-        if (insert(key,nullptr))
-        {
-            while (items[index].key != key)
-            {
-                index += h(key) * h(key) % items.size();
-            }
-        }
-        
-        while (items[index].s == status::occupied)
-        {
-            if (items[index].key == key)
-            {
-                break;
-            }
-            
-            index += h(key) * h(key) % items.size();
-        }
-        items[index].s = status::occupied;
-        numItems++;
+        index = h(key) % items.size();
+        V def;
+        this->insert(key,def);
         return items[index].val;
     }
 
@@ -198,7 +181,7 @@ class dblhash {
         K key;
     };
     vector<bucket> items;
-    size_t numItems;
+    size_t numItems,index;
     hasher h,h2;
     
     void rehash_grow() {
@@ -223,7 +206,8 @@ class dblhash {
     }
 
     bool insert(const K& key, const V& val) {
-        size_t index = h(key) % items.size(),c = 1;
+        index = h(key) % items.size();
+        size_t c = 1;
         while (items[index].s == status::occupied)
         {
             if (items[index].key == key)
@@ -251,7 +235,8 @@ class dblhash {
     }
 
     void erase(const K& key) {
-        size_t index = h(key) % items.size(), c = 1;
+        index = h(key) % items.size();
+        size_t c = 1;
         while (items[index].s == status::occupied)
         {
             if (items[index].key == key)
@@ -266,28 +251,9 @@ class dblhash {
     }
 
     V& operator[](const K& key) {
-        size_t index = h(key) % items.size(),c = 1;
-        if (insert(key,nullptr))
-        {
-            while (items[index].key != key)
-            {
-                index += h2(key) * c % items.size();
-                c++;
-            }
-        }
-        
-        while (items[index].s == status::occupied)
-        {
-            if (items[index].key == key)
-            {
-                break;
-            }
-            
-            index += h2(key) * c % items.size();
-            c++;
-        }
-        items[index].s = status::occupied;
-        numItems++;
+        index = h(key) % items.size();
+        V def;
+        this->insert(key,def);
         return items[index].val;
     }
 
