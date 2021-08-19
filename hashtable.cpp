@@ -14,6 +14,9 @@
 int main() {
     int passedTests = 0;
     sepchain<string, int> hash1;
+    cout << "Testing Seperate Chaining Probing\n";
+    string s('*',80);
+    cout << s << endl;
     cout << "Test 1\n";
     hash1["foo"] = 0;
     if (hash1["foo"] == 0)
@@ -26,7 +29,7 @@ int main() {
         cout << "Actual: " << hash1["foo"] << endl;
         cout << "Expected: 0\n";
     }
-    
+    cout << "Test 2\n";
     hash1["foo"] = 1;
     if (hash1["foo"] == 1)
     {
@@ -38,7 +41,7 @@ int main() {
         cout << "Actual: " << hash1["foo"] << endl;
         cout << "Expected: 1\n";
     }
-    
+    cout << "Test 3\n";
     if (hash1.size() == 1)
     {
         passedTests++;
@@ -49,16 +52,69 @@ int main() {
         cout << "Actual: " << hash1.size() << endl;
         cout << "Expected: 1\n";
     }
+    cout << "Test 4\n";
     hash1.erase("foo",1);
-    assert(hash1.size() == 0);
+    if (hash1.size() == 0)
+    {
+        passedTests++;
+        cout << "Passed\n";
+    }
+    else {
+        cout << "Failed Erase Test\n";
+        cout << "Actual: " << hash1.size() << endl;
+        cout << "Expected: 0\n";
+    }
 
     quadprobe<string, int> hash2;
-    assert(hash2["foo"] == 0);
+    cout << "Testing Quadratic Probing\n";
+    cout << s << endl;
+    cout << "Test 1\n";
+    hash2["foo"] = 0;
+    if (hash2["foo"] == 0)
+    {
+        passedTests++;
+        cout << "Passed\n";
+    }
+    else {
+        cout << "Failed\n";
+        cout << "Actual: " << hash2["foo"] << endl;
+        cout << "Expected: 0\n";
+    }
+    cout << "Test 2\n";
     hash2["foo"] = 1;
-    assert(hash2["foo"] == 1);
-    assert(hash2.size() == 1);
+    if (hash2["foo"] == 1)
+    {
+        passedTests++;
+        cout << "Passed\n";
+    }
+    else {
+        cout << "Failed\n";
+        cout << "Actual: " << hash2["foo"] << endl;
+        cout << "Expected: 1\n";
+    }
+    cout << "Test 3\n";
+    if (hash2.size() == 1)
+    {
+        passedTests++;
+        cout << "Passed\n";
+    }
+    else {
+        cout << "Failed Size Test\n";
+        cout << "Actual: " << hash2.size() << endl;
+        cout << "Expected: 1\n";
+    }
+    cout << "Test 4\n";
     hash2.erase("foo");
-    assert(hash2.size() == 0);
+    if (hash2.size() == 0)
+    {
+        passedTests++;
+        cout << "Passed\n";
+    }
+    else {
+        cout << "Failed Erase Test\n";
+        cout << "Actual: " << hash2.size() << endl;
+        cout << "Expected: 0\n";
+    }
 
     dblhash<string, int> hash3;
     assert(hash3["foo"] == 0);

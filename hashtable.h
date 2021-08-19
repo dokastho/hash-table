@@ -94,7 +94,7 @@ class sepchain{
 template<typename K, typename V, typename hasher = std::hash<K>>
 class quadprobe {
     struct bucket {
-        status s = status::occupied;
+        status s = status::empty;
         V val;
         K key;
     };
@@ -176,7 +176,7 @@ class quadprobe {
 template<typename K, typename V, typename hasher = std::hash<K>>
 class dblhash {
     struct bucket {
-        status s = status::occupied;
+        status s = status::empty;
         V val;
         K key;
     };
