@@ -159,6 +159,7 @@ class quadprobe {
             {
                 items[index].s = status::deleted;
                 numItems--;
+                break;
             }
             
             index += h(key) * h(key) % items.size();
@@ -249,11 +250,12 @@ class dblhash {
             {
                 items[index].s = status::deleted;
                 numItems--;
+                break;
             }
             
             index += h2(key) * c % items.size();
             c++;
-            if (start == index;)
+            if (start == index)
             {
                 break;
             }
