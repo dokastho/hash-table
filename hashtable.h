@@ -14,24 +14,20 @@ enum class status : uint8_t {
 
 template<typename K, typename V, typename hasher = std::hash<K>>
 class sepchain{
-    struct bucket {
-        K key;
-        vector<V> values;
-    };
-    vector<bucket> items;
+    vector<vector<pair<K,V>>> items;
     hasher h;
     size_t numItems;
 
     void rehash_grow() {
-        vector<bucket> oldItems = items;
+        vector<vector<pair<K,V>>> oldItems = items;
         items.clear();
         items.resize(2 * oldItems.size());
 
         for (size_t i = 0; i < oldItems.size(); i++)
         {
-            for (size_t j = 0; j < oldItems[i].values.size(); j++)
+            for (size_t j = 0; j < oldItems[i].size(); j++)
             {
-                insert(oldItems[i].key,oldItems[i].values[j]);
+                insert(oldItems[i][j].first,oldItems[i][j].second);
             }
         }
     }
@@ -49,14 +45,14 @@ class sepchain{
 
     bool insert(const K& key, const V& val) {
         size_t index = h(key) % this->size();
-        for (size_t i = 0; i < items[index].values.size(); i++)
+        for (size_t i = 0; i < items[index].size(); i++)
         {
-            if (val == items[index].values[i])
+            if (val == items[index][i].second)
             {
                 return false;
             }
         }
-        items[index].values.push_back(val);
+        items[index].push_back({key,val});
         numItems++;
         if (items.size() / numItems == 2)
         {
@@ -68,9 +64,9 @@ class sepchain{
 
     void erase(const K& key, const V& val) {
         size_t index = h(key) % this->size();
-        for (size_t i = 0; i < items[index].values.size(); i++)
+        for (size_t i = 0; i < items[index].size(); i++)
         {
-            if (val == items[index][i])
+            if (val == items[index][i].second)
             {
                 swap(items[index][i],items[index].back());
                 items[index].pop_back();
@@ -83,15 +79,15 @@ class sepchain{
         size_t index = h(key) % this->size();
         if (!this->insert(key, nullptr))
         {
-            for (size_t i = 0; i < items[index].values.size(); i++)
+            for (size_t i = 0; i < items[index].size(); i++)
             {
-                if (items[index].values[i] == nullptr)
+                if (items[index][i].second == nullptr)
                 {
-                    return &items[index].values[i];
+                    return items[index][i].second;
                 }
             }
         }
-        return &items[index].values.back();
+        return items[index].back().second;
     }
 };
 
@@ -141,7 +137,7 @@ class quadprobe {
         bucket b;
         b.val = val;
         b.key = key;
-        b.status = status::occupied;
+        b.s = status::occupied;
 
         items[index] = b;
         numItems++;
@@ -154,7 +150,7 @@ class quadprobe {
         return true;
     }
 
-    void erase(const K& key, const V& val) {
+    void erase(const K& key) {
         size_t index = h(key) % items.size();
         while (items[index].s == status::occupied)
         {
@@ -189,7 +185,7 @@ class quadprobe {
         }
         items[index].s = status::occupied;
         numItems++;
-        return &items[index].val;
+        return items[index].val;
     }
 
 };
@@ -241,7 +237,7 @@ class dblhash {
         bucket b;
         b.val = val;
         b.key = key;
-        b.status = status::occupied;
+        b.s = status::occupied;
 
         items[index] = b;
         numItems++;
@@ -254,7 +250,7 @@ class dblhash {
         return true;
     }
 
-    void erase(const K& key, const V& val) {
+    void erase(const K& key) {
         size_t index = h(key) % items.size(), c = 1;
         while (items[index].s == status::occupied)
         {
@@ -292,7 +288,7 @@ class dblhash {
         }
         items[index].s = status::occupied;
         numItems++;
-        return &items[index].val;
+        return items[index].val;
     }
 
 };

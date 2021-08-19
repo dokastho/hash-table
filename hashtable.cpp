@@ -17,18 +17,24 @@ int main() {
     hash1["foo"] = 1;
     assert(hash1["foo"] == 1);
     assert(hash1.size() == 1);
+    hash1.erase("foo",1);
+    assert(hash1.size() == 0);
 
     quadprobe<string, int> hash2;
     assert(hash2["foo"] == 0);
     hash2["foo"] = 1;
     assert(hash2["foo"] == 1);
     assert(hash2.size() == 1);
+    hash2.erase("foo");
+    assert(hash2.size() == 0);
 
     dblhash<string, int> hash3;
     assert(hash3["foo"] == 0);
     hash3["foo"] = 1;
     assert(hash3["foo"] == 1);
     assert(hash3.size() == 1);
+    hash3.erase("foo");
+    assert(hash3.size() == 0);
 
     return 0;
 }
