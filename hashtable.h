@@ -152,6 +152,7 @@ class quadprobe {
 
     void erase(const K& key) {
         index = h(key) % items.size();
+        size_t start = index;
         while (items[index].s == status::occupied)
         {
             if (items[index].key == key)
@@ -161,6 +162,11 @@ class quadprobe {
             }
             
             index += h(key) * h(key) % items.size();
+            if (index == start)
+            {
+                break;
+            }
+            
         }
     }
 
@@ -236,7 +242,7 @@ class dblhash {
 
     void erase(const K& key) {
         index = h(key) % items.size();
-        size_t c = 1;
+        size_t c = 1, start = index;
         while (items[index].s == status::occupied)
         {
             if (items[index].key == key)
@@ -247,6 +253,11 @@ class dblhash {
             
             index += h2(key) * c % items.size();
             c++;
+            if (start == index;)
+            {
+                break;
+            }
+            
         }
     }
 
