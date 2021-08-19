@@ -47,7 +47,7 @@ class sepchain{
         index = h(key) % items.size();
         for (size_t i = 0; i < items[index].size(); i++)
         {
-            if (val == items[index][i].second)
+            if (key == items[index][i].first)
             {
                 return false;
             }

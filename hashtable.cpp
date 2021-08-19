@@ -15,7 +15,9 @@ int main() {
     int passedTests = 0;
     sepchain<string, int> hash1;
     cout << "Test 1\n";
-    if (hash1["foo"] == 0) {
+    hash1["foo"] = 0;
+    if (hash1["foo"] == 0)
+    {
         passedTests++;
         cout << "Passed\n";
     }
@@ -25,10 +27,28 @@ int main() {
         cout << "Expected: 0\n";
     }
     
-    
     hash1["foo"] = 1;
-    assert(hash1["foo"] == 1);
-    assert(hash1.size() == 1);
+    if (hash1["foo"] == 1)
+    {
+        passedTests++;
+        cout << "Passed\n";
+    }
+    else {
+        cout << "Failed\n";
+        cout << "Actual: " << hash1["foo"] << endl;
+        cout << "Expected: 1\n";
+    }
+    
+    if (hash1.size() == 1)
+    {
+        passedTests++;
+        cout << "Passed\n";
+    }
+    else {
+        cout << "Failed Size Test\n";
+        cout << "Actual: " << hash1.size() << endl;
+        cout << "Expected: 1\n";
+    }
     hash1.erase("foo",1);
     assert(hash1.size() == 0);
 
