@@ -3,5 +3,5 @@ The purpose of this file is to demonstrate my understanding of the c++ STL unord
 
 This snapshot also demonstrates an implementation of templates, enum types, private structs and very basic testing.
 
-Authored by Thomas Dokas dokastho@umich.edu
-#snapshots
+Written by Thomas Dokas dokastho@umich.edu
+#snapshots #portfolio
