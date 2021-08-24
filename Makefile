@@ -11,7 +11,8 @@ WRAPFILES=$(filter-out $(TESTSOURCES), \
                    $(wildcard Makefile *.h *.hpp *.cpp test*.txt))
 
 release: CXXFLAGS += -O3 -DNDEBUG
-release: $(EXECUTABLE)
+release: 
+	$(CXX) $(CXXFLAGS) $(SOURCES) -o $(EXECUTABLE)
 debug: CXXFLAGS += -g3 -DDEBUG
 debug:
 	$(CXX) $(CXXFLAGS) $(SOURCES) -o $(EXECUTABLE)_debug
