@@ -1,6 +1,6 @@
 #!/bin/bash
 make clean 
-make fullsubmit
+make
 git add .
 git commit
 git push origin main

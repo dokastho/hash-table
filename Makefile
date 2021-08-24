@@ -12,7 +12,7 @@ WRAPFILES=$(filter-out $(TESTSOURCES), \
 
 release: CXXFLAGS += -O3 -DNDEBUG
 release: 
-	$(CXX) $(CXXFLAGS) $(SOURCES) -o $(EXECUTABLE)
+	$(CXX) $(CXXFLAGS) $(SOURCES) -o $(EXECUTABLE).exe
 debug: CXXFLAGS += -g3 -DDEBUG
 debug:
 	$(CXX) $(CXXFLAGS) $(SOURCES) -o $(EXECUTABLE)_debug
